@@ -75,5 +75,5 @@ export class PrismaUserRepository {
 
 const test = new PrismaUserRepository();
 console.log(
-  await test.createUser({ email: "test223@gmail.com", name: "teste" })
+  await test.createUser({ email: "test2223@gmail.com", name: "teste" })
 );

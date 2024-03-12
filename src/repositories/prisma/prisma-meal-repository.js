@@ -42,16 +42,45 @@ export class PrismaMealRepository {
 
     return meal;
   }
+
+  async getMealById(id) {
+    const meal = await prisma.meal.findFirst({
+      where: {
+        id,
+      },
+    });
+    return meal;
+  }
+
+  async getMealByName(name) {
+    const meal = await prisma.meal.findFirst({
+      include: {
+        name,
+      },
+    });
+
+    return meal;
+  }
+
+  async deleteMealById(id) {
+    await prisma.meal.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }
 
-const test = new PrismaMealRepository();
+// const test = new PrismaMealRepository();
 // console.log(
 //   await test.createMeal({
-//     description: "arroz com feijao",
-//     name: "teste",
-//     userId: 1,
+//     description: "arroz com feijao2",
+//     name: "arroz2",
+//     userId: 2,
 //     is_in_diet: true,
 //   })
 // );
 
-console.log(await test.findUserMeals(1));
+// console.log(await test.findUserMeals(1));
+// console.log(await test.getMealById(1));
+// console.log(await test.findUserMeals(2));
