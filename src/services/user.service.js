@@ -10,11 +10,13 @@ export class UserService {
   async createUser(data) {
     console.log(data.email);
     const existingUser = await this.findUserByEmail(data.email);
+
     if (existingUser) {
       return new EmailAlreadyExistsError(
         "Este email já está em uso. Por favor, escolha outro."
       );
     }
+
     const createdUser = await this.userRepository.createUser(data);
     return createdUser;
   }
