@@ -1,5 +1,5 @@
 import express from "express";
-import routes from "./routes/userRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import mealRoutes from "./routes/mealRoutes.js";
 import bodyParser from "body-parser";
 
@@ -8,7 +8,7 @@ const port = 3000;
 
 app.use(bodyParser.json());
 
-app.use("/", routes);
+app.use("/", userRoutes);
 app.use("/", mealRoutes);
 
 app.listen(port, () => {
