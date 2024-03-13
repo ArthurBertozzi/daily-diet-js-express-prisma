@@ -5,8 +5,9 @@ const prisma = new PrismaClient();
 export class PrismaUserRepository {
   #uservalidation(user, id) {
     if (!user) {
-      throw new Error(`User with id ${id} does not exist.`);
+      return false;
     }
+    return true;
   }
 
   async findAll() {
@@ -21,7 +22,10 @@ export class PrismaUserRepository {
       },
     });
 
-    this.#uservalidation(user, id);
+    // alguma forma de deixar isso menos repetitivo entre as requests?
+    if (this.#uservalidation(user, id) === false) {
+      return { message: `User with id ${id} does not exist.` };
+    }
 
     return user;
   }
@@ -33,14 +37,14 @@ export class PrismaUserRepository {
       },
     });
 
-    this.#uservalidation(user, email);
-
     return user;
   }
 
   async deleteById(id) {
     const user = await this.findById(id);
-    this.#uservalidation(user, id);
+    if (this.#uservalidation(user, id) === false) {
+      return { message: `User with id ${id} does not exist.` };
+    }
     await prisma.user.delete({
       where: {
         id,
@@ -54,7 +58,9 @@ export class PrismaUserRepository {
       ...user,
       data,
     };
-    this.#uservalidation(user, id);
+    if (this.#uservalidation(user, id) === false) {
+      return { message: `User with id ${id} does not exist.` };
+    }
 
     const updated_user = prisma.user.update({
       where: {
@@ -73,7 +79,7 @@ export class PrismaUserRepository {
   }
 }
 
-const test = new PrismaUserRepository();
-console.log(
-  await test.createUser({ email: "test2223@gmail.com", name: "teste" })
-);
+// const test = new PrismaUserRepository();
+// console.log(
+//   await test.createUser({ email: "test2223@gmail.com", name: "teste" })
+// );

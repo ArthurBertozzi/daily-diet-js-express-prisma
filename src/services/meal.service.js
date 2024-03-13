@@ -10,12 +10,17 @@ export class MealService {
     return meals;
   }
 
+  async createMeal(data) {
+    const meal = await this.mealRepository.createMeal(data);
+    return meal;
+  }
+
   async getSingleMeal(mealId) {
     const meal = await this.mealRepository.getMealById(mealId);
     return meal;
   }
 
-  async updateMealData(mealId, data) {
+  async updateMeal(mealId, data) {
     const updatedMeal = await this.mealRepository.updateMeal(mealId, data);
     return updatedMeal;
   }
@@ -28,6 +33,9 @@ export class MealService {
     // Precisa do async aqui?
     let currentStreak = 0;
     let bestStreak = 0;
+
+    // Essa seria uma boa forma de ordenar usando js? Preciso ordernar antes de obter o best streak
+    meals.sort((a, b) => a.id - b.id);
 
     for (const meal of meals) {
       // Quando usar for...of ou for normal (let i ...)

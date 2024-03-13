@@ -3,10 +3,11 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export class PrismaMealRepository {
-  #mealvalidation(meal, id) {
+  #mealvalidation(meal) {
     if (!meal) {
-      throw new Error(`Meal with id ${id} does not exist.`);
+      return false;
     }
+    return true;
   }
 
   async findUserMeals(userId) {
@@ -20,12 +21,15 @@ export class PrismaMealRepository {
   }
 
   async updateMeal(id, data) {
-    let meal = await this.findById(id);
+    let meal = await this.getMealById(id);
     meal = {
       ...meal,
       data,
     };
-    this.#mealvalidation(id, meal);
+
+    if (this.#mealvalidation(meal) === false) {
+      return { message: `meal with id ${id} does not exist.` };
+    }
 
     const updated_meal = prisma.meal.update({
       where: {
