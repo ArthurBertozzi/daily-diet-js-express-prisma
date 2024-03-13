@@ -19,15 +19,17 @@ router
   });
 
 router.route("/users").post(async (req, res) => {
-  // Tratativa de erro com try catch na rota + exception customizada no service faz sentido?
-
   try {
-    const user = await userService.createUser(req.body);
+    console.log(req.body);
+    const userOrError = await userService.createUser(req.body);
+
+    if (userOrError instanceof EmailAlreadyExistsError) {
+      return res.status(400).json({ error: userOrError.message });
+    }
+
+    const user = userOrError;
     res.json(user);
   } catch (error) {
-    if (error instanceof EmailAlreadyExistsError) {
-      return res.status(400).json({ error: error.message });
-    }
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }

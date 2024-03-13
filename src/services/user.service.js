@@ -11,7 +11,7 @@ export class UserService {
     console.log(data.email);
     const existingUser = await this.findUserByEmail(data.email);
     if (existingUser) {
-      throw new EmailAlreadyExistsError(
+      return new EmailAlreadyExistsError(
         "Este email já está em uso. Por favor, escolha outro."
       );
     }

@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export class PrismaMealRepository {
+  constructor() {}
   #mealvalidation(meal) {
     if (!meal) {
       return false;

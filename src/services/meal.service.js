@@ -29,12 +29,12 @@ export class MealService {
     await this.mealRepository.deleteMealById(mealId);
   }
 
-  async #getBestMealStreak(meals) {
-    // Precisa do async aqui?
+  #getBestMealStreak(meals) {
+    // Precisa do async aqui? -> R: não precisa
     let currentStreak = 0;
     let bestStreak = 0;
 
-    // Essa seria uma boa forma de ordenar usando js? Preciso ordernar antes de obter o best streak
+    // Essa seria uma boa forma de ordenar usando js? Preciso ordernar antes de obter o best streak -> R: sim, é uma boa forma
     meals.sort((a, b) => a.id - b.id);
 
     for (const meal of meals) {
@@ -66,7 +66,7 @@ export class MealService {
       (meal) => meal.is_in_diet === false
     ).length;
 
-    const bestStreak = await this.#getBestMealStreak(meals);
+    const bestStreak = this.#getBestMealStreak(meals);
 
     const returnInfo = {
       "Meal Quantity": userMealQuantity,
