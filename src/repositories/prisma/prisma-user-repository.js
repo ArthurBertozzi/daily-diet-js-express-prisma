@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export class PrismaUserRepository {
-  #uservalidation(user, id) {
+  #uservalidation(user) {
     if (!user) {
       return false;
     }
@@ -23,7 +23,7 @@ export class PrismaUserRepository {
     });
 
     // alguma forma de deixar isso menos repetitivo entre as requests?
-    if (this.#uservalidation(user, id) === false) {
+    if (this.#uservalidation(user) === false) {
       return { message: `User with id ${id} does not exist.` };
     }
 
@@ -42,7 +42,7 @@ export class PrismaUserRepository {
 
   async deleteById(id) {
     const user = await this.findById(id);
-    if (this.#uservalidation(user, id) === false) {
+    if (this.#uservalidation(user) === false) {
       return { message: `User with id ${id} does not exist.` };
     }
     await prisma.user.delete({
@@ -58,7 +58,7 @@ export class PrismaUserRepository {
       ...user,
       data,
     };
-    if (this.#uservalidation(user, id) === false) {
+    if (this.#uservalidation(user) === false) {
       return { message: `User with id ${id} does not exist.` };
     }
 

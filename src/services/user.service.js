@@ -16,8 +16,12 @@ export class UserService {
         "Este email já está em uso. Por favor, escolha outro."
       );
     }
+    try {
+      const createdUser = await this.userRepository.createUser(data);
+    } catch (error) {
+      console.log(error);
+    }
 
-    const createdUser = await this.userRepository.createUser(data);
     return createdUser;
   }
 
