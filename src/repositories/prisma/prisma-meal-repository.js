@@ -1,6 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma_db } from "../../utils/db.js";
 
 export class PrismaMealRepository {
   // podemos instanciar o prisma client pelo construtor (dependencia) constructor() {}
@@ -12,7 +10,7 @@ export class PrismaMealRepository {
   }
 
   async findUserMeals(userId) {
-    const userMeals = await prisma.meal.findMany({
+    const userMeals = await prisma_db.meal.findMany({
       where: {
         userId,
       },
@@ -32,7 +30,7 @@ export class PrismaMealRepository {
       return { message: `meal with id ${id} does not exist.` };
     }
 
-    const updated_meal = prisma.meal.update({
+    const updated_meal = prisma_db.meal.update({
       where: {
         id,
       },
@@ -43,13 +41,13 @@ export class PrismaMealRepository {
   }
 
   async createMeal(data) {
-    const meal = await prisma.meal.create({ data });
+    const meal = await prisma_db.meal.create({ data });
 
     return meal;
   }
 
   async getMealById(id) {
-    const meal = await prisma.meal.findFirst({
+    const meal = await prisma_db.meal.findFirst({
       where: {
         id,
       },
@@ -58,7 +56,7 @@ export class PrismaMealRepository {
   }
 
   async getMealByName(name) {
-    const meal = await prisma.meal.findFirst({
+    const meal = await prisma_db.meal.findFirst({
       include: {
         name,
       },
@@ -68,7 +66,7 @@ export class PrismaMealRepository {
   }
 
   async deleteMealById(id) {
-    await prisma.meal.delete({
+    await prisma_db.meal.delete({
       where: {
         id,
       },

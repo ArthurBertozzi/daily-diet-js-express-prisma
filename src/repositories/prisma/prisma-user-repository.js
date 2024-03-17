@@ -1,6 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma_db } from "../../utils/db.js";
 
 export class PrismaUserRepository {
   #uservalidation(user) {
@@ -11,12 +9,12 @@ export class PrismaUserRepository {
   }
 
   async findAll() {
-    const users = await prisma.user.findMany();
+    const users = await prisma_db.user.findMany();
     return users;
   }
 
   async findById(id) {
-    const user = await prisma.user.findFirst({
+    const user = await prisma_db.user.findFirst({
       where: {
         id,
       },
@@ -31,7 +29,7 @@ export class PrismaUserRepository {
   }
 
   async findByEmail(email) {
-    const user = await prisma.user.findFirst({
+    const user = await prisma_db.user.findUnique({
       where: {
         email,
       },
@@ -45,7 +43,7 @@ export class PrismaUserRepository {
     if (this.#uservalidation(user) === false) {
       return { message: `User with id ${id} does not exist.` };
     }
-    await prisma.user.delete({
+    await prisma_db.user.delete({
       where: {
         id,
       },
@@ -62,7 +60,7 @@ export class PrismaUserRepository {
       return { message: `User with id ${id} does not exist.` };
     }
 
-    const updated_user = prisma.user.update({
+    const updated_user = prisma_db.user.update({
       where: {
         id,
       },
@@ -73,7 +71,7 @@ export class PrismaUserRepository {
   }
 
   async createUser(data) {
-    const user = await prisma.user.create({ data });
+    const user = await prisma_db.user.create({ data });
 
     return user;
   }

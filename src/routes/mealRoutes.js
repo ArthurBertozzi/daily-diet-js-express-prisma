@@ -2,6 +2,7 @@ import express from "express";
 import { PrismaMealRepository } from "../repositories/prisma/prisma-meal-repository.js";
 import { MealService } from "../services/meal.service.js";
 import { parseReqId } from "./utils/parseIdToInt.js";
+import { isAuthenticated } from "./utils/isAuthenticated.js";
 
 const router = express.Router();
 const mealService = new MealService(PrismaMealRepository);
@@ -17,7 +18,7 @@ router
 // Metrics from an user
 router
   .route("/user/:user_id/metrics")
-  .get(parseReqId("user_id"), async (req, res) => {
+  .get(isAuthenticated, async (req, res) => {
     const user = await mealService.consolidateUserMealData(req.params.user_id);
     res.json(user);
   });
@@ -38,7 +39,7 @@ router
     res.json({ message: "Meal deleted." });
   });
 
-router.route("/meals").post(async (req, res) => {
+router.route("/meals").post(isAuthenticated, async (req, res) => {
   const meal = await mealService.createMeal(req.body);
   res.json(meal);
 });

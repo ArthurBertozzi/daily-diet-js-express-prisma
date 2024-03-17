@@ -14,13 +14,18 @@ datasource db {
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
+  id      String      @id @unique @default(uuid())
   email   String   @unique
   name    String?
   created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  password String
+  refreshTokens RefreshToken[]
   meals Meal[]
 
 }
+
+
 
 model Meal {
   id Int @id @default(autoincrement())
@@ -29,7 +34,17 @@ model Meal {
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   is_in_diet Boolean
-  userId Int
+  userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+}
+
+model RefreshToken {
+  id          String   @id @unique @default(uuid())
+  hashedToken String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  revoked     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

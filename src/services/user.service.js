@@ -1,5 +1,7 @@
 // import { PrismaUserRepository } from "../repositories/prisma/prisma-user-repository";
 
+import bcrypt from "bcrypt";
+
 import { EmailAlreadyExistsError } from "./exceptions/userWithThisEmailAlreadyExists.js";
 
 export class UserService {
@@ -7,22 +9,25 @@ export class UserService {
     this.userRepository = new userRepository();
   }
 
-  async createUser(data) {
-    console.log(data.email);
-    const existingUser = await this.findUserByEmail(data.email);
+  async createUser(user) {
+    const existingUser = await this.findUserByEmail(user.email);
 
     if (existingUser) {
       return new EmailAlreadyExistsError(
         "Este email já está em uso. Por favor, escolha outro."
       );
     }
+
+    console.log(user);
+
     try {
-      const createdUser = await this.userRepository.createUser(data);
+      user.password = bcrypt.hashSync(user.password, 10);
+      const createdUser = await this.userRepository.createUser(user);
+      return createdUser;
     } catch (error) {
       console.log(error);
+      return error;
     }
-
-    return createdUser;
   }
 
   async deleteUser(userId) {
